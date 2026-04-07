@@ -1,0 +1,45 @@
+<!-- Plugin Configuration File: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+
+    <!-- Unique identifier of the plugin. It should be FQN, cannot be changed between the plugin versions. -->
+    <id>au.com.barrelled</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
+    <name>Barrelled</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor url="https://github.com/alisharifipx">Ali Sharifi</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
+    <description><![CDATA[
+        Generates and updates TypeScript barrel (index.ts) files for a folder.
+    ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>JavaScript</depends>
+
+    <!-- Extensions defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+
+        <!-- Adds "Barrelled" under Settings > Tools -->
+        <projectConfigurable
+                parentId="tools"
+                instance="au.com.barrelled.BarrelledSettingsConfigurable"
+                id="au.com.barrelled.settings"
+                displayName="Barrelled"/>
+    </extensions>
+
+    <actions>
+        <action id="au.com.barrelled.GenerateBarrelFileAction"
+                class="au.com.barrelled.GenerateBarrelFileAction"
+                text="Generate Barrel File"
+                description="Create or update a TypeScript barrel file in a given directory">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
