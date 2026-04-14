@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class BarrelledSettingsConfigurable implements Configurable {
 
@@ -109,14 +108,14 @@ public class BarrelledSettingsConfigurable implements Configurable {
         gbc.insets = JBUI.insetsTop(2);
         customPathField = new TextFieldWithBrowseButton();
         String storedPath = settings.getCustomPath();
-        String displayPath = storedPath.isEmpty()
-            ? Objects.requireNonNull(project.getBasePath())
-            : project.getBasePath() + "/" + storedPath;
+        String basePath = project.getBasePath() != null ? project.getBasePath() : "";
+        String displayPath = storedPath.isEmpty() ? basePath : basePath + "/" + storedPath;
         customPathField.setText(displayPath);
-        VirtualFile projectRoot = LocalFileSystem.getInstance().findFileByPath(Objects.requireNonNull(project.getBasePath()));
-        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-            .withRoots(projectRoot)
-            .withTreeRootVisible(true);
+        VirtualFile projectRoot = basePath.isEmpty() ? null : LocalFileSystem.getInstance().findFileByPath(basePath);
+        FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+        if (projectRoot != null) {
+            descriptor = descriptor.withRoots(projectRoot).withTreeRootVisible(true);
+        }
 
         customPathField.addBrowseFolderListener(new TextBrowseFolderListener(descriptor, project));
         panel.add(customPathField, gbc);
@@ -215,9 +214,8 @@ public class BarrelledSettingsConfigurable implements Configurable {
         relativePathField.setText(settings.getRelativePath());
 
         String storedPath = settings.getCustomPath();
-        String displayPath = storedPath.isEmpty()
-            ? Objects.requireNonNull(project.getBasePath())
-            : project.getBasePath() + "/" + storedPath;
+        String base = project.getBasePath() != null ? project.getBasePath() : "";
+        String displayPath = storedPath.isEmpty() ? base : base + "/" + storedPath;
         customPathField.setText(displayPath);
 
         if (".ts".equals(settings.getFileExtension())) {
